@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Youtube from '../listContent/Youtube';
 
-const apiKey = "someApiKey";
+const apiKey = "AIzaSyAUUfDpnPm3K9lhXYWLH6fg0e4nVZjkPxk";
 const resultNum = "6";
 const channelId = "UC_ntXHv-XdKCD7CPynVvnQw";
 const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&maxResults=${resultNum}&q=tekken&key=${apiKey}`;
