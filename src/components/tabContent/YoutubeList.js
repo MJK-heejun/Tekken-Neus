@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import Youtube from '../listContent/Youtube';
+import {GridList} from 'material-ui/GridList';
+
 
 const apiKey = "AIzaSyAUUfDpnPm3K9lhXYWLH6fg0e4nVZjkPxk";
-const resultNum = "6";
+const resultNum = "8";
 const channelId = "UC_ntXHv-XdKCD7CPynVvnQw";
 const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&maxResults=${resultNum}&q=tekken&key=${apiKey}`;
 
@@ -39,7 +41,7 @@ class YoutubeList extends Component {
         if(this.state.requestFailed) return <p>Network Failed!</p>
         if(!this.state.youtubeList) return <p>Loading...</p>
 
-        var listItems = this.state.youtubeList.items.map(function(item) {
+        const listItems = this.state.youtubeList.items.map(function(item) {
             return (
               <Youtube key={item.id.videoId} data={item}></Youtube>
             );
@@ -47,7 +49,9 @@ class YoutubeList extends Component {
           
         return (
             <div>
-                {listItems}
+                <GridList cellHeight={180}>
+                    {listItems}
+                </GridList>
             </div>
         );
     }

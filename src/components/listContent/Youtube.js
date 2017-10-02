@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {GridTile} from 'material-ui/GridList';
 
 class Youtube extends Component {
 
@@ -9,11 +10,13 @@ class Youtube extends Component {
 
     render() {
         return (
-            <div>
-                {this.props.data.snippet.title}<br/>
-                {this.props.data.snippet.description}<br/>
-                <img src={this.props.data.snippet.thumbnails.default.url} />
-            </div>
+            <GridTile
+                    key={this.props.data.snippet.title}
+                    title={this.props.data.snippet.title}
+                    subtitle={<span>{this.props.data.snippet.description}</span>}
+                    >
+                    <img src={this.props.data.snippet.thumbnails.high.url} />
+            </GridTile>
         );
     }
 }
