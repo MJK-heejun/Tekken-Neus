@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Youtube from '../listContent/Youtube';
 import {GridList, GridTile} from 'material-ui/GridList';
 
 
@@ -36,10 +35,13 @@ class YoutubeList extends Component {
             })
     }
 
-
     render() {
         if(this.state.requestFailed) return <p>Network Failed!</p>
         if(!this.state.youtubeList) return <p>Loading...</p>
+        
+        var openYoutube = (videoId) =>{
+            window.open(`https://www.youtube.com/watch?v=${videoId}`,'_blank');
+        };
 
         const listGridTile = this.state.youtubeList.items.map(function(item, index) {
             return (
@@ -49,9 +51,10 @@ class YoutubeList extends Component {
                     key={item.snippet.title}
                     title={item.snippet.title}
                     subtitle={<span>{item.snippet.description}</span>}
+                    onClick={(e) => openYoutube(item.id.videoId)}
                     >
-                    <img src={item.snippet.thumbnails.high.url} />
-                </GridTile>            
+                    <img src={item.snippet.thumbnails.high.url} alt="placeholder"/>
+                </GridTile>
             );
           });
           
