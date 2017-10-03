@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {GridList, GridTile} from 'material-ui/GridList';
-
+import './YoutubeList.css';
 
 const apiKey = "AIzaSyAUUfDpnPm3K9lhXYWLH6fg0e4nVZjkPxk";
 const resultNum = "7";
@@ -46,12 +46,14 @@ class YoutubeList extends Component {
         const listGridTile = this.state.youtubeList.items.map(function(item, index) {
             return (
                 <GridTile
+                    className="grid-tile"
                     cols={index === 0 ? 2 : 1}
                     rows={index === 0 ? 2 : 1}            
                     key={item.snippet.title}
                     title={item.snippet.title}
                     subtitle={<span>{item.snippet.description}</span>}
                     onClick={(e) => openYoutube(item.id.videoId)}
+                    titlePosition="top"
                     >
                     <img src={item.snippet.thumbnails.high.url} alt="placeholder"/>
                 </GridTile>
