@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import Youtube from '../listContent/Youtube';
-import {GridList} from 'material-ui/GridList';
+import {GridList, GridTile} from 'material-ui/GridList';
 
 
 const apiKey = "AIzaSyAUUfDpnPm3K9lhXYWLH6fg0e4nVZjkPxk";
-const resultNum = "8";
+const resultNum = "7";
 const channelId = "UC_ntXHv-XdKCD7CPynVvnQw";
 const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&maxResults=${resultNum}&q=tekken&key=${apiKey}`;
 
@@ -41,16 +41,26 @@ class YoutubeList extends Component {
         if(this.state.requestFailed) return <p>Network Failed!</p>
         if(!this.state.youtubeList) return <p>Loading...</p>
 
-        const listItems = this.state.youtubeList.items.map(function(item) {
+        const listGridTile = this.state.youtubeList.items.map(function(item, index) {
             return (
-              <Youtube key={item.id.videoId} data={item}></Youtube>
+                <GridTile
+                    cols={index === 0 ? 2 : 1}
+                    rows={index === 0 ? 2 : 1}            
+                    key={item.snippet.title}
+                    title={item.snippet.title}
+                    subtitle={<span>{item.snippet.description}</span>}
+                    >
+                    <img src={item.snippet.thumbnails.high.url} />
+                </GridTile>            
             );
           });
           
         return (
             <div>
-                <GridList cellHeight={180}>
-                    {listItems}
+                <GridList 
+                    cellHeight={180}
+                    cols={2}>
+                    {listGridTile}
                 </GridList>
             </div>
         );
