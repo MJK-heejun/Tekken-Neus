@@ -1,8 +1,6 @@
-.grid-tile {
-  cursor: pointer; }
-
-img {
+#YoutubeList .grid-tile {
+  cursor: pointer;
   opacity: 0.95; }
 
-img:hover {
+#YoutubeList .grid-tile:hover {
   opacity: 0.7; }

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import {GridList, GridTile} from 'material-ui/GridList';
+import {List, ListItem} from 'material-ui/List';
+import ActionInfo from 'material-ui/svg-icons/action/info';
+import Divider from 'material-ui/Divider';
 
 //const url = "https://news.google.com/news?q=tekken&output=rss"; //depreacted
 //google feed api alternative
@@ -42,29 +44,31 @@ class GoogleNewsList extends Component {
         if(this.state.requestFailed) return <p>Network Failed!</p>
         if(!this.state.googleNewsList) return <p>Loading...</p>
 
-        const listGridTile = this.state.googleNewsList.items.map(function(item, index) {
+        let openNews = (link) =>{
+            let parsedStr = link.split(";").pop();
+            let url = parsedStr.substring(4, parsedStr.length);            
+            window.open(`${url}`,'_blank');
+        };
+
+        const listNews = this.state.googleNewsList.items.map(function(item) {
             return (
-                <GridTile
-                    className="grid-tile"
-                    cols={2}
-                    rows={1}            
-                    key={item.title}
-                    title={item.title}
-                    subtitle={<span>{item.pubDate}</span>}
-                    titlePosition="top"
-                    >
-                    <span>some description</span>
-                </GridTile>
+                <div key={item.title}>
+                    <ListItem                
+                        leftIcon={<ActionInfo />}                    
+                        primaryText={item.title}
+                        secondaryText={item.pubDate}
+                        onClick={(e) => openNews(item.link)}
+                    />
+                    <Divider />
+                </div>
             );
           });
 
         return (
             <div>
-                <GridList 
-                    cellHeight={180}
-                    cols={2}>
-                    {listGridTile}
-                </GridList>
+                <List> 
+                    {listNews}
+                </List>
             </div>
         );
     }
