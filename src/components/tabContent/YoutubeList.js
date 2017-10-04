@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {GridList, GridTile} from 'material-ui/GridList';
-import './YoutubeList.css';
+import '../../styles/YoutubeList.css';
 
 const apiKey = "AIzaSyAUUfDpnPm3K9lhXYWLH6fg0e4nVZjkPxk";
 const resultNum = "7";

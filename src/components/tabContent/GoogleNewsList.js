@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {List, ListItem} from 'material-ui/List';
 import ActionInfo from 'material-ui/svg-icons/action/info';
 import Divider from 'material-ui/Divider';
+import '../../styles/GoogleNewsList.css';
 
 //const url = "https://news.google.com/news?q=tekken&output=rss"; //depreacted
 //google feed api alternative
@@ -65,7 +66,7 @@ class GoogleNewsList extends Component {
           });
 
         return (
-            <div>
+            <div id="GoogleNewsList">
                 <List> 
                     {listNews}
                 </List>
