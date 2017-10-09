@@ -9,10 +9,7 @@ import AvSubscriptions from 'material-ui/svg-icons/av/subscriptions';
 import AvWeb from 'material-ui/svg-icons/av/web';
 import '../../styles/ContentSection.css';
 
-//to do. make it swipeable
-// From https://github.com/oliviertassinari/react-swipeable-views
-//import SwipeableViews from 'react-swipeable-views';
-//see http://www.material-ui.com/#/components/tabs
+
 
 class ContentSection extends Component {
 
@@ -57,7 +54,7 @@ class ContentSection extends Component {
                 <SwipeableViews
                 index={this.state.slideIndex}
                 onChangeIndex={this.handleChange}>
-                        <div>         
+                        <div className="ytl">         
                             <YoutubeList></YoutubeList>
                         </div>
                         <div>

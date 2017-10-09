@@ -1,6 +1,7 @@
-#YoutubeList .grid-tile {
-  cursor: pointer;
-  opacity: 0.95; }
-
-#YoutubeList .grid-tile:hover {
-  opacity: 0.7; }
+#YoutubeList {
+  overflow-y: hidden; }
+  #YoutubeList .grid-tile {
+    cursor: pointer;
+    opacity: 0.95; }
+  #YoutubeList .grid-tile:hover {
+    opacity: 0.7; }
