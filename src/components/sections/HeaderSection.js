@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import AppBar from 'material-ui/AppBar';
+import Drawer from 'material-ui/Drawer';
 
 class HeaderSection extends Component {
     render() {
