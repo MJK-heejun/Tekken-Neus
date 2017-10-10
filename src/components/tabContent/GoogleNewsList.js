@@ -4,9 +4,9 @@ import ActionInfo from 'material-ui/svg-icons/action/info';
 import Divider from 'material-ui/Divider';
 import '../../styles/GoogleNewsList.css';
 
-//const url = "https://news.google.com/news?q=tekken&output=rss&scoring=n"; //depreacted
+//const url = "https://news.google.com/news?q=tekken7&output=rss&scoring=n"; //depreacted
 //google feed api alternative
-const url = "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fnews.google.com%2Fnews%3Fq%3Dtekken%26output%3Drss%26scoring%3Dn";
+const url = "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fnews.google.com%2Fnews%3Fq%3Dtekken7%2Ctekken%26output%3Drss%26scoring%3Dn";
 
 class GoogleNewsList extends Component {
 
