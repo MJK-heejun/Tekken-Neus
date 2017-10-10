@@ -27,7 +27,6 @@ class YoutubeList extends Component {
             .then(d => d.json())
             .then(d =>{
                 this.setState({ youtubeList: d });
-                console.log(d);
             }, () => {
                 this.setState({
                     requestFailed: true

@@ -1,32 +1,106 @@
 import React, { Component } from 'react';
 import registerServiceWorker from '../../registerServiceWorker';
+import RaisedButton from 'material-ui/RaisedButton';
 
 class SettingSection extends Component {
 
     constructor(){
         super();
         this.state = {
-            swRegistration: null
+            swRegistration: null,
+            isSubscribed: false,
+            applicationServerPublicKey: "BFIw1bHtKl4YWXB1-VnMn6XPrXq19LViZ_4LNuHmS-5UwxCkP9GfQKs3QHctKegzAXBpOOSpu3EvQuVztS56y1o",
+            buttonText: "Disable Push Messaging",
+            isButtonDisabled: false
         };
+        this.buttonHandler = this.buttonHandler.bind(this);
+    }
+    
+    buttonHandler(){        
+        this.setState({ isButtonDisabled: true });
+        if (this.state.isSubscribed) {
+            // TODO: Unsubscribe user
+            console.log("do unsubscribe");
+        } else {
+            this.subscribeUser();
+        }        
     }
 
-    componentWillMount(){
+    componentDidMount(){
         registerServiceWorker.on("swRegistered", ()=>{
             this.setState({
                 swRegistration: registerServiceWorker.swRegistration
             });
+            this.initializeUI();
         });
     }
 
+    initializeUI(){
+        this.state.swRegistration.pushManager.getSubscription().then((subscription) => {
+            this.setState({ isSubscribed: !(subscription === null) });              
+            this.updateSubscriptionOnServer();
+            if (this.state.isSubscribed) {
+                console.log('User IS subscribed.');
+            } else {
+                console.log('User is NOT subscribed.');
+            }      
+            this.updateBtn();
+        });
+    }
+
+    subscribeUser(){
+        const applicationServerKey = this.urlB64ToUint8Array(this.state.applicationServerPublicKey);
+        this.state.swRegistration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: applicationServerKey
+        })
+        .then((subscription) => {
+            console.log('User is subscribed.');      
+            this.updateSubscriptionOnServer(subscription);      
+            this.setState({ isSubscribed: true });
+            this.updateBtn();
+        })
+        .catch((err) => {
+            console.log('Failed to subscribe the user: ', err);
+            this.updateBtn();
+        });
+    }
+
+    unsubscribeUser(){
+
+    }
+
+    updateBtn() {
+        if (this.state.isSubscribed) 
+            this.setState({ buttonText: 'Disable Push Messaging' });
+        else
+            this.setState({ buttonText: 'Enable Push Messaging' });
+        this.setState({ isButtonDisabled: false });
+    }
+
+    updateSubscriptionOnServer(){
+
+    }
+
+    urlB64ToUint8Array(base64String) {
+        const padding = '='.repeat((4 - base64String.length % 4) % 4);
+        const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');      
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);      
+        for (let i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+    }
+
+
     render() {
         if(!this.state.swRegistration) return (<p>Service Worker Not registered</p>);
-        if(this.state.swRegistration){
-            console.log("swRegistration obj");
-            console.log(this.state.swRegistration);
-        }
+
         return (
             <div>
-                this is setting section
+                <br/>
+                <RaisedButton label={this.state.buttonText} onClick={this.buttonHandler} disabled={this.state.isButtonDisabled}/>
             </div>
         );
     }

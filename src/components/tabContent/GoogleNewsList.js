@@ -31,7 +31,6 @@ class GoogleNewsList extends Component {
             .then(d => d.json())
             .then(d =>{
                 this.setState({ googleNewsList: d });
-                console.log(d);
             }, () => {
                 this.setState({
                     requestFailed: true
