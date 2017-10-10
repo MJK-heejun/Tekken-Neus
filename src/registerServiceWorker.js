@@ -21,11 +21,11 @@ class RegisterServiceWorker extends EventEmitter{
             /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
           )
       );
-      this.swRegistration = null;
+      this.swRegistration = {};
   }
 
   register() {
-    if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+    if (process.env.NODE_ENV !== 'production' && 'serviceWorker' in navigator) {
       // The URL constructor is available in all browsers that support SW.
       const publicUrl = new URL(process.env.PUBLIC_URL, window.location);
       if (publicUrl.origin !== window.location.origin) {
@@ -53,7 +53,8 @@ class RegisterServiceWorker extends EventEmitter{
     navigator.serviceWorker
       .register(swUrl)
       .then(registration => {
-        this.swRegistration = registration;
+        this.swRegistration = registration; 
+        this.emit("swRegistered");
         registration.onupdatefound = () => {
           const installingWorker = registration.installing;
           installingWorker.onstatechange = () => {
@@ -116,6 +117,7 @@ class RegisterServiceWorker extends EventEmitter{
 }
 
 const registerServiceWorker = new RegisterServiceWorker();
+window.registerServiceWorker = registerServiceWorker;
 export default registerServiceWorker;
 
 
