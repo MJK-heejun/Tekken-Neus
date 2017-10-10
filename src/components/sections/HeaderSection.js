@@ -6,7 +6,7 @@ import SettingSection from './SettingSection';
 class HeaderSection extends Component {
     constructor(props) {
         super(props);
-        this.state = {open: false};
+        this.state = {open: true};
       }
 
     handleToggle = () => this.setState({open: !this.state.open});
