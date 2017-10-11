@@ -19,8 +19,7 @@ class SettingSection extends Component {
     buttonHandler(){        
         this.setState({ isButtonDisabled: true });
         if (this.state.isSubscribed) {
-            // TODO: Unsubscribe user
-            console.log("do unsubscribe");
+            this.unsubscribeUser()
         } else {
             this.subscribeUser();
         }        
@@ -74,7 +73,19 @@ class SettingSection extends Component {
     }
 
     unsubscribeUser(){
-
+        this.state.swRegistration.pushManager.getSubscription().then(function(subscription) {
+            if (subscription) 
+                return subscription.unsubscribe();
+        })
+        .catch((error) => {
+            console.log('Error unsubscribing', error);
+        })
+        .then(() => {
+            this.updateSubscriptionOnServer(null);      
+            console.log('User is unsubscribed.');
+            this.setState({ isSubscribed: false });
+            this.updateBtn();
+        });
     }
 
     updateBtn() {
