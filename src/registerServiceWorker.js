@@ -21,25 +21,11 @@ class RegisterServiceWorker extends EventEmitter{
             /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
           )
       );
-      this.swRegistration = {};
-
-      window.addEventListener('push', (event) => {
-        console.log('[Service Worker] Push Received.');
-        console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
-      
-        const title = 'Push Codelab';
-        const options = {
-          body: 'Yay it works.',
-          icon: 'images/icon.png',
-          badge: 'images/badge.png'
-        };
-      
-        event.waitUntil(window.registration.showNotification(title, options));
-      });         
+      this.swRegistration = {};       
   }
 
   register() {
-    if (process.env.NODE_ENV !== 'production' && 'serviceWorker' in navigator) {
+    if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
       // The URL constructor is available in all browsers that support SW.
       const publicUrl = new URL(process.env.PUBLIC_URL, window.location);
       if (publicUrl.origin !== window.location.origin) {
