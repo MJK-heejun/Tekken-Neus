@@ -38,7 +38,7 @@ class SettingSection extends Component {
     initializeUI(){
         this.state.swRegistration.pushManager.getSubscription().then((subscription) => {
             this.setState({ isSubscribed: !(subscription === null) });              
-            this.updateSubscriptionOnServer();
+            this.updateSubscriptionOnServer(subscription);
             if (this.state.isSubscribed) {
                 console.log('User IS subscribed.');
             } else {
@@ -50,8 +50,14 @@ class SettingSection extends Component {
 
     subscribeUser(){
         const applicationServerKey = this.urlB64ToUint8Array(this.state.applicationServerPublicKey);
+        /*
+        Calling subscribe() returns a promise which will resolve after the following steps:        
+        1) The user has granted permission to display notifications.
+        2) The browser has sent a network request to a push service to get the details to generate a PushSubscription.
+        => The subscribe() promise will resolve with a PushSubscription if these steps were successful.
+        */
         this.state.swRegistration.pushManager.subscribe({
-            userVisibleOnly: true,
+            userVisibleOnly: true, //this value is required and must be true
             applicationServerKey: applicationServerKey
         })
         .then((subscription) => {
@@ -61,6 +67,7 @@ class SettingSection extends Component {
             this.updateBtn();
         })
         .catch((err) => {
+            //If the user doesn't grant permission or if there is any problem subscribing the user, the promise will reject with an error.
             console.log('Failed to subscribe the user: ', err);
             this.updateBtn();
         });
@@ -71,6 +78,15 @@ class SettingSection extends Component {
     }
 
     updateBtn() {
+        if (Notification.permission === 'denied') {
+            this.setState({ 
+                buttonText: 'Push Messaging Blocked.',
+                isButtonDisabled: true
+            });
+            this.updateSubscriptionOnServer(null);
+            return;
+        }
+
         if (this.state.isSubscribed) 
             this.setState({ buttonText: 'Disable Push Messaging' });
         else
@@ -78,8 +94,13 @@ class SettingSection extends Component {
         this.setState({ isButtonDisabled: false });
     }
 
-    updateSubscriptionOnServer(){
 
+    //send our subscription to a backend
+    updateSubscriptionOnServer(subscription){
+        //just print for now
+        if (subscription) {
+            console.log(JSON.stringify(subscription));
+        }
     }
 
     urlB64ToUint8Array(base64String) {

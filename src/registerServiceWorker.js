@@ -22,6 +22,20 @@ class RegisterServiceWorker extends EventEmitter{
           )
       );
       this.swRegistration = {};
+
+      window.addEventListener('push', (event) => {
+        console.log('[Service Worker] Push Received.');
+        console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
+      
+        const title = 'Push Codelab';
+        const options = {
+          body: 'Yay it works.',
+          icon: 'images/icon.png',
+          badge: 'images/badge.png'
+        };
+      
+        event.waitUntil(window.registration.showNotification(title, options));
+      });         
   }
 
   register() {
@@ -45,7 +59,7 @@ class RegisterServiceWorker extends EventEmitter{
           // This is running on localhost. Lets check if a service worker still exists or not.
           this.checkValidServiceWorker(swUrl);
         }
-      });
+      });   
     }
   }
   
@@ -54,7 +68,7 @@ class RegisterServiceWorker extends EventEmitter{
       .register(swUrl)
       .then(registration => {
         this.swRegistration = registration; 
-        this.emit("swRegistered");
+        this.emit("swRegistered"); //event emit to be usable by Setting Section
         registration.onupdatefound = () => {
           const installingWorker = registration.installing;
           installingWorker.onstatechange = () => {
@@ -117,7 +131,7 @@ class RegisterServiceWorker extends EventEmitter{
 }
 
 const registerServiceWorker = new RegisterServiceWorker();
-window.registerServiceWorker = registerServiceWorker;
+//window.registerServiceWorker = registerServiceWorker; //uncomment this to be usable by console.
 export default registerServiceWorker;
 
 
