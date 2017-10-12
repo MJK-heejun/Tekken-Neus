@@ -1,13 +1,16 @@
 'use strict';
 
+let newLink = ""; //need improvement
 
 self.addEventListener('push', function(event) {
   console.log('[Service Worker] Push Received.');
   console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
 
-  const title = 'Push Codelab';
+  let receivedObj = event.data.json();
+  newLink = receivedObj.link; //need improvement
+  const title = receivedObj.title;
   const options = {
-    body: 'Yay it works.',
+    body: receivedObj.body,
     icon: 'images/icon.png',
     badge: 'images/badge.png'
   };
@@ -23,9 +26,6 @@ self.addEventListener('notificationclick', function(event) {
   event.notification.close();
 
   event.waitUntil(
-    clients.openWindow('https://developers.google.com/web/')
+    clients.openWindow(newLink) //need improvement
   );
 });
-
-console.log("sup brah");
-console.log(self);
