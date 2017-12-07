@@ -36,10 +36,14 @@ namespace TekkenNeusPolling
 
         private async Task<JObject> getLatestNews()
         {
-            var response = await client.GetAsync(URL);
-            var responseString = await response.Content.ReadAsStringAsync();
-            JObject jObj = JObject.Parse(responseString);            
-            return jObj;
+            using (HttpClient client = new HttpClient())
+            using (HttpResponseMessage response = await client.GetAsync(URL))
+            using (HttpContent content = response.Content)
+            {
+                var responseString = await content.ReadAsStringAsync();
+                JObject jObj = JObject.Parse(responseString);
+                return jObj;
+            }
         }
 
         private async Task<string> getLatestNewsTitleFromDb()
