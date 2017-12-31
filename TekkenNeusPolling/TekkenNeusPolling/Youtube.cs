@@ -59,6 +59,8 @@ namespace TekkenNeusPolling
         private async void updateDb(string idFromDb)
         {
             //to be implemented
+            //empty first
+            //then just insert new items
         }
 
     }

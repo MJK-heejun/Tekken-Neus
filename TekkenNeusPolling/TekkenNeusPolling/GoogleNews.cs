@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,53 +15,68 @@ namespace TekkenNeusPolling
 
         private static readonly HttpClient client = new HttpClient();
         private static readonly string URL = "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fnews.google.com%2Fnews%3Fq%3Dtekken7%2Ctekken%26output%3Drss%26scoring%3Dn";
+        SQLiteConnection db = null;
 
-
-        public GoogleNews()
+        public GoogleNews(SQLiteConnection db)
         {
-
+            this.db = db;
         }
 
         public async void TrySendPushNotification()
         {
-            JObject newObj = await getLatestNews();
-            string titleFromDb = await getLatestNewsTitleFromDb();
+            GoogleNewsList newsList = await getLatestNews();
+            newsList.items.RemoveAll((obj) => obj.title == "This RSS feed URL is deprecated");
 
-            string latestTitle = (string)newObj["items"][0]["title"];
+            string titleFromDb = getLatestNewsTitleFromDb();
+            string latestTitle = newsList.items[0].title;
             if (!latestTitle.Equals(titleFromDb))
-            {
-                sendPushNotification(newObj);
-                updateDb(titleFromDb);
-            }
+                sendPushNotification(latestTitle);
+            updateDb(newsList);
         }
 
 
-        private async Task<JObject> getLatestNews()
+        private async Task<GoogleNewsList> getLatestNews()
         {
             using (HttpClient client = new HttpClient())
             using (HttpResponseMessage response = await client.GetAsync(URL))
             using (HttpContent content = response.Content)
             {
                 var responseString = await content.ReadAsStringAsync();
-                JObject jObj = JObject.Parse(responseString);
-                return jObj;
+                return JsonConvert.DeserializeObject<GoogleNewsList>(responseString);
             }
         }
 
-        private async Task<string> getLatestNewsTitleFromDb()
+        private string getLatestNewsTitleFromDb()
         {
-            //to be implemented
-            return "";
+            var list = db.Query<GoogleNewsTb>("SELECT * FROM GoogleNewsTb ORDER BY pubDate DESC LIMIT 1");
+            return list.Count > 0 ? list.First().title : "";
         }
 
-        private async void sendPushNotification(JObject newObj)
+        private async void sendPushNotification(string newTitle)
         {
             //to be implemented
+            string msg = string.Format("New Tekken7 News Available. \"{0}\"", newTitle);
+            Console.WriteLine(msg);
+            //send msg
         }
 
-        private async void updateDb(string idFromDb)
+        private async void updateDb(GoogleNewsList list)
         {
-            //to be implemented
+            db.Execute("delete from GoogleNewsTb");
+            foreach (var obj in list.items)
+            {
+                addGoogleNews(obj.title, obj.pubDate);
+            }
+        }
+
+        private void addGoogleNews(string title, DateTime pubDate)
+        {
+            var Id = db.Insert(new GoogleNewsTb()
+            {
+                title = title,
+                pubDate = pubDate
+            });
+            Console.WriteLine("inserted {0}", Id);
         }
 
     }
